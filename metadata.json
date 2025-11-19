@@ -1,0 +1,5 @@
+{
+  "name": "Mandala AI - Goal Planner",
+  "description": "A React-based Mandala Chart application powered by Gemini AI for structured goal setting and breakdown.",
+  "requestFramePermissions": []
+}
