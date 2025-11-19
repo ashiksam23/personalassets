@@ -123,15 +123,20 @@ const App: React.FC = () => {
         tasks: mappedTasks
       });
 
-    } catch (error) {
-      alert("Failed to generate content. Please check your API key or try again.");
+    } catch (error: any) {
+      console.error("Generation Error:", error);
+      if (error.message && error.message.includes("API Key is missing")) {
+        alert("Setup Required: Gemini API Key is missing.\n\nIf you are on Vercel, please add 'API_KEY' to your Environment Variables in the project settings.");
+      } else {
+        alert("Failed to generate content. " + (error.message || "Please try again."));
+      }
     } finally {
       setIsGenerating(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans">
+    <div className="min-h-screen flex flex-col bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-50 via-slate-100 to-slate-200 text-slate-900 font-sans">
       <ControlPanel 
         onGenerate={handleGenerate}
         onReset={() => { if(confirm("Clear all fields?")) setData(EMPTY_DATA); }}
@@ -145,7 +150,7 @@ const App: React.FC = () => {
       />
 
       <main className="flex-1 p-4 md:p-8 overflow-auto flex items-center justify-center">
-        <div className="relative min-w-[900px] aspect-square max-h-[1200px] max-w-[1200px] p-4 bg-white rounded-3xl shadow-2xl border border-slate-100">
+        <div className="relative min-w-[900px] aspect-square max-h-[1200px] max-w-[1200px] p-4 bg-white/40 backdrop-blur-md rounded-3xl shadow-2xl border border-white/50">
           
           <div className="grid grid-cols-3 gap-3 md:gap-6 h-full w-full">
             {GRID_INDICES.map((blockIndex) => (

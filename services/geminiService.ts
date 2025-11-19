@@ -2,7 +2,10 @@ import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { GeminiMandalaResponse } from '../types';
 
 const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+
+// Initialize AI client only if key exists to prevent immediate crash on load,
+// but validation happens during function call.
+const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 const mandalaSchema: Schema = {
   type: Type.OBJECT,
@@ -26,8 +29,8 @@ const mandalaSchema: Schema = {
 };
 
 export const generateMandalaContent = async (mainGoal: string): Promise<GeminiMandalaResponse> => {
-  if (!apiKey) {
-    throw new Error("API Key is missing.");
+  if (!apiKey || !ai) {
+    throw new Error("API Key is missing. Please set the API_KEY environment variable.");
   }
 
   const prompt = `
